@@ -4,7 +4,10 @@ from flask import Flask, render_template, redirect, url_for, request, session
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, IntegerField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email
-
+import matplotlib
+matplotlib.use('Agg')  # Use a non-interactive backend
+import matplotlib.pyplot as plt
+import os
 # Initialize the Flask application
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -30,28 +33,39 @@ class EmailForm(FlaskForm):
 # Load data from CSV at the start of the app
 data = pd.read_csv('static/county_scenarios.csv')  # Adjust path if needed
 
+# Create a directory for plots if not exists
+if not os.path.exists('static/plots'):
+    os.makedirs('static/plots')
+
 def get_scenario_data(state, county):
     # Filter data based on the selected county and state
     county_data = data[(data['State'] == state) & (data['County'] == county)]
     
     if county_data.empty:
-        print(f"No data found for State: {state}, County: {county}. Available counties in {state}:",
-              data[data['State'] == state]['County'].unique())
         logging.warning(f"No data found for County: {county}, State: {state}")
-        return {
-            'Conservative': {'value': 0},
-            'Moderate': {'value': 0},
-            'High Net': {'value': 0}
-        }
+        return {}
 
-    # Organize the data in a dictionary by Scenario for the template
-    scenarios = {
-        scenario: {
-            "value": county_data[county_data['Scenario'] == scenario]['Value'].sum()
-        }
-        for scenario in ['Conservative', 'Moderate', 'High Net']
-    }
-    return scenarios
+    # Group by Scenario and Year, then calculate average values
+    avg_data = county_data.groupby(['Scenario', 'Year'])['Value'].mean().reset_index()
+
+    # Create bar plots for each scenario
+    scenarios = ['Conservative', 'Moderate', 'High Net']
+    plot_paths = {}
+    for scenario in scenarios:
+        scenario_data = avg_data[avg_data['Scenario'] == scenario]
+        if not scenario_data.empty:
+            plt.figure(figsize=(10, 6))
+            plt.bar(scenario_data['Year'], scenario_data['Value'], color='skyblue')
+            plt.title(f'{scenario} Scenario for {county}, {state}')
+            plt.xlabel('Year')
+            plt.ylabel('Average Value')
+            plt.xticks(rotation=45)
+            plot_path = f'static/plots/{county}_{state}_{scenario}.png'
+            plt.savefig(plot_path)
+            plt.close()
+            plot_paths[scenario] = plot_path
+
+    return plot_paths, avg_data.groupby('Scenario')['Value'].mean().to_dict()
 
 
 
@@ -97,22 +111,23 @@ def acres():
 def policy():
     county = session.get('county')
     state = session.get('state')
-    scenarios = get_scenario_data(state, county)  # Use both state and county
+    plot_paths, averages = get_scenario_data(state, county)
 
     form = EmailForm()
     if form.validate_on_submit():
         session['email'] = form.email.data
         return redirect(url_for("thanks"))
 
-    acres = session.get('acres', 1)
-    print(f"Acres retrieved from session: {acres}")
-
-    adjusted_scenarios = {
-        key: {'value': value['value'] * acres}
-        for key, value in scenarios.items()
+    # Prepare data for JavaScript
+    scenario_data = {
+        "labels": list(averages.keys()),
+        "values": list(averages.values())
     }
 
-    return render_template("policy.html", scenarios=adjusted_scenarios, step=3, form=form)
+    return render_template("policy.html", plot_paths=plot_paths, averages=averages, scenario_data=scenario_data, step=3, form=form)
+
+
+
 
 
 @app.route("/thanks")

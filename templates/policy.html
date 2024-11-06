@@ -1,38 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Policy Scenarios</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://use.typekit.net/bez5nda.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
     <main>
         <h1>Your Policy's Potential</h1>
 
-        <div class="policy-container">
-            <!-- Conservative Column -->
-            <div class="policy-column">
-                <div class="policy-header">CONSERVATIVE :: ${{ scenarios['Conservative']['value'] }}</div>
+        {% if averages %}
+            <div class="chart-container">
+                <canvas id="averageChart" width="400" height="200"></canvas>
             </div>
-
-            <!-- Moderate Column -->
-            <div class="policy-column">
-                <div class="policy-header">MODERATE :: ${{ scenarios['Moderate']['value'] }}</div>
-            </div>
-
-            <!-- High Net Column -->
-            <div class="policy-column">
-                <div class="policy-header">HIGH NET :: ${{ scenarios['High Net']['value'] }}</div>
-            </div>
-        </div>
-
+        {% else %}
+            <p>No data available for the selected county and state.</p>
+        {% endif %}
+        
         <header>
             <h3>Get Monthly Updates on These Policy Options!</h3>
-            <div >
-            <p>Entering your email enrolls you in our raffle for a branded belt buckle. Redd Summit Advisors does not sell or share your information.</p>
-        </div>
+            <div>
+                <p>Entering your email enrolls you in our raffle for a branded belt buckle. <br>Redd Summit Advisors does not sell or share your information.</p>
+            </div>
         </header>
 
         <div>
@@ -42,7 +35,6 @@
                     {{ form.email(class="input-field") }}
                     <button type="submit" class="submit-btn">Submit</button>
                 </div>
-                
             </form>
         </div>
     </main>
@@ -56,5 +48,36 @@
     <a href="/" class="restart-icon">
         <i class="fas fa-redo"></i>
     </a>
+
+    <script>
+        // Data passed from Flask
+        const scenarioData = {{ scenario_data | tojson }};
+
+        // Render a chart for average values
+        if (scenarioData) {
+            const ctx = document.getElementById('averageChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: scenarioData.labels,  // Scenario names
+                    datasets: [{
+                        label: 'Average Values',
+                        data: scenarioData.values,  // Average values for each scenario
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
+
 </html>
