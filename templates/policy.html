@@ -3,95 +3,58 @@
 <head>
     <title>Policy Scenarios</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://use.typekit.net/bez5nda.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 <body>
-    <header>Policy Scenarios for {{ session.get('county', 'your county') }}</header>
     <main>
+        <h1>Your Policy's Potential</h1>
+
         <div class="policy-container">
             <!-- Conservative Column -->
             <div class="policy-column">
-                <div class="policy-header">CONSERVATIVE :: ${{ scenarios['Conservative']['avg_net'] }}</div>
-                <table class="policy-table">
-                    {% for year, value in scenarios['Conservative']['yearly_data'].items() %}
-                    <tr>
-                        <td>{{ year }}</td>
-                        <td>
-                            <div class="bar" style="width: {{ (value / max_value) * 100 }}%; background-color: {{ 'red' if value < 0 else '#6c8f2c' }}">
-                                ${{ max_value }}
-                            </div>
-                            
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                <div class="policy-header">CONSERVATIVE :: ${{ scenarios['Conservative']['value'] }}</div>
             </div>
 
             <!-- Moderate Column -->
             <div class="policy-column">
-                <div class="policy-header">MODERATE :: ${{ scenarios['Moderate']['avg_net'] }}</div>
-                <table class="policy-table">
-                    {% for year, value in scenarios['Moderate']['yearly_data'].items() %}
-                    <tr>
-                        <td>{{ year }}</td>
-                        <td>
-                            <div class="bar" style="width: {{ (value / max_value) * 100 }}%; background-color: {{ 'red' if value < 0 else '#6c8f2c' }}">
-                                ${{ max_value }}
-                            </div>
-                            
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                <div class="policy-header">MODERATE :: ${{ scenarios['Moderate']['value'] }}</div>
             </div>
 
             <!-- High Net Column -->
             <div class="policy-column">
-                <div class="policy-header">HIGH NET :: ${{ scenarios['High Net']['avg_net'] }}</div>
-                <table class="policy-table">
-                    {% for year, value in scenarios['High Net']['yearly_data'].items() %}
-                    <tr>
-                        <td>{{ year }}</td>
-                        <td>
-                            <div class="bar" style="width: {{ (value / max_value) * 100 }}%; background-color: {{ 'red' if value < 0 else '#6c8f2c' }}">
-                                ${{ max_value }}
-                            </div>
-                            
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                <div class="policy-header">HIGH NET :: ${{ scenarios['High Net']['value'] }}</div>
             </div>
         </div>
-    </main>
 
-    <!-- Progress Tracker -->
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const steps = document.querySelectorAll(".step");
-            const lines = document.querySelectorAll(".line");
-    
-            steps.forEach((step, index) => {
-                if (step.classList.contains("active")) {
-                    for (let i = 0; i <= index; i++) {
-                        steps[i].classList.add("filled");
-                        if (i < lines.length) lines[i].classList.add("filled");
-                    }
-                }
-            });
-        });
-    </script>
-            <a href="{{ url_for('email') }}" class="submit-btn">Next</a>
-
-        <div class="progress-tracker">
-            <div class="step {{ 'active' if step >= 1 else '' }}">1</div>
-            <div class="line {{ 'active' if step >= 2 else '' }}"></div>
-            <div class="step {{ 'active' if step >= 2 else '' }}">2</div>
-            <div class="line {{ 'active' if step >= 3 else '' }}"></div>
-            <div class="step {{ 'active' if step >= 3 else '' }}">3</div>
-            <div class="line {{ 'active' if step >= 4 else '' }}"></div>
-            <div class="step {{ 'active' if step >= 4 else '' }}">4</div>
+        <header>
+            <h3>Get Monthly Updates on These Policy Options!</h3>
+            <div >
+            <p>Entering your email enrolls you in our raffle for a branded belt buckle. Redd Summit Advisors does not sell or share your information.</p>
         </div>
+        </header>
+
+        <div>
+            <form method="post" class="email-form">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.email(class="input-field") }}
+                    <button type="submit" class="submit-btn">Submit</button>
+                </div>
+                
+            </form>
+        </div>
+    </main>
+    <div class="progress-tracker">
+        <div class="step {% if step >= 1 %}active{% endif %}">1</div>
+        <div class="line {% if step >= 2 %}active{% endif %}"></div>
+        <div class="step {% if step >= 2 %}active{% endif %}">2</div>
+        <div class="line {% if step >= 3 %}active{% endif %}"></div>
+        <div class="step {% if step >= 3 %}active{% endif %}">3</div>
+    </div>
+    <a href="/" class="restart-icon">
+        <i class="fas fa-redo"></i>
+    </a>
 </body>
 </html>

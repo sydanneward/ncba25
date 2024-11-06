@@ -1,12 +1,13 @@
 /* General Styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: "proxima-nova", sans-serif;
     background-color: white;
     color: #333;
     margin: 0;
     display: flex;
     flex-direction: column;
     height: 100vh;
+    
 }
 
 header {
@@ -22,16 +23,19 @@ main {
     flex-direction: column;
     align-items: center;
     padding: 1rem;
-    max-width: 90%; /* Sets the maximum width of the main content */
-    margin: 0 auto; /* Centers the main content */
+    max-width: 90%;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center; 
 }
 
-/* Wider map */
+/* Map Styling */
 #map {
     width: 100%;
-    max-width: 1000px; /* You can increase this if desired */
-    height: 500px; /* Keeps the height consistent */
+    max-width: 1000px;
+    height: 500px;
     margin-bottom: 1rem;
+    background: transparent;
 }
 
 #county-info {
@@ -41,48 +45,96 @@ main {
 }
 
 #county-info p {
-    font-weight: bold;}
+    font-weight: bold;
+}
+
+.inline-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.input-field {
+    width: 400px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border:2px solid black;
+    background-color: white;
+}
+
 
 .submit-btn {
-    display: block;
-    width: 100%;
-    max-width: 200px;
-    margin: 1rem auto;
-    padding: 0.7rem;
-    font-size: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
     color: white;
     background-color: #ab1417;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    border:2px solid black;
+
 }
 
 .submit-btn:hover {
     background-color: #8b1013;
 }
 
-.input-field {
+.submit-btn::after {
+    content: "→";
+    margin-left: 0.5rem;
+    font-size: 1.2rem;
+}
+
+
+
+/* Input Field Styling */
+.input-field,
+.acre-field {
     width: 100%;
     max-width: 400px;
     padding: 0.5rem;
     font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 0.5rem;
+    border:2px solid black;
+    background-color: white;
+}
+
+.acre-field {
+    max-width: 200px;
+    border-right: none;
 }
 
 .form-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 1rem;
-    text-align: center;
 }
+
+/* Acre Input Group */
+#acre-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    border:2px solid black;
+    background-color: white;
+}
+
 /* Progress Tracker Styling */
 .progress-tracker {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin: 2rem 0 1rem;
+}
+
+.step,
+.line {
+    transition: background-color 0.3s;
 }
 
 .step {
@@ -96,53 +148,22 @@ main {
     justify-content: center;
     font-weight: bold;
     font-size: 1.2rem;
-    transition: background-color 0.3s;
 }
 
 .line {
     width: 50px;
     height: 4px;
     background-color: #ccc;
-    transition: background-color 0.3s;
 }
 
-.step.active {
-    background-color: #ab1417;
-}
-
-.line.active {
-    background-color: #ab1417;
-}
-.step.filled {
-    background-color: #ab1417;
-    transition: background-color 0.3s ease-in-out;
-}
-
+.step.active,
+.step.filled,
+.line.active,
 .line.filled {
     background-color: #ab1417;
-    transition: background-color 0.3s ease-in-out;
-}
-body {
-    font-family: Arial, sans-serif;
-    background-color: white;
-    color: #333;
-    margin: 0;
 }
 
-header {
-    background-color: #ab1417;
-    color: white;
-    text-align: center;
-    padding: 1rem 0;
-    font-size: 1.5rem;
-}
-
-main {
-    display: flex;
-    justify-content: center;
-    padding: 1rem;
-}
-
+/* Policy Table Styling */
 .policy-container {
     display: flex;
     justify-content: space-around;
@@ -186,4 +207,43 @@ main {
     font-size: 0.9rem;
     text-align: right;
     white-space: nowrap;
+}
+
+.disclaimer {
+    font-size: small;
+}
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.restart-btn {
+    display: inline-block;
+    padding: 0.7rem 1.5rem;
+    font-size: 1.1rem;
+    color: white;
+    background-color: #ab1417;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.restart-btn:hover {
+    background-color: #8b1013;
+}
+.restart-icon {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-size: 2rem;
+    color: #ab1417;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.restart-icon:hover {
+    color: #8b1013;
 }
