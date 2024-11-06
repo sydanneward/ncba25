@@ -12,14 +12,65 @@
 <body>
     <main>
         <h1>Your Policy's Potential</h1>
-
-        {% if averages %}
+        <div class="charts-wrapper">
+            {% for scenario, data in scenarios_data.items() %}
             <div class="chart-container">
-                <canvas id="averageChart" width="400" height="200"></canvas>
+                <!-- Header with scenario name and formatted average value -->
+                <div class="chart-header">
+                    <h2>{{ scenario }} :: ${{ "{:,.2f}".format(averages[scenario]) }}</h2>
+                </div>
+                <!-- Bar chart -->
+                <canvas id="chart-{{ scenario }}"></canvas>
+                <script>
+                    var ctx = document.getElementById('chart-{{ scenario }}').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: {{ data['years']|tojson }},
+                            datasets: [{
+                                data: {{ data['values']|tojson }},
+                                backgroundColor: 'rgba(108, 143, 44, 0.8)', // Green color for bars
+                                borderColor: 'rgba(108, 143, 44, 1)', // Darker green border for bars
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            plugins: {
+                                legend: {
+                                    display: false // Hide the legend
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(tooltipItem) {
+                                            return tooltipItem.raw.toLocaleString(); // Format tooltip values with commas
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return value.toLocaleString(); // Format x-axis labels with commas
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                </script>
             </div>
-        {% else %}
-            <p>No data available for the selected county and state.</p>
-        {% endif %}
+            {% endfor %}
+            
+            
+            
+        </div>
+        
+        </div>
+        
+        </div>
         
         <header>
             <h3>Get Monthly Updates on These Policy Options!</h3>
@@ -51,30 +102,32 @@
 
     <script>
         // Data passed from Flask
-        const scenarioData = {{ scenario_data | tojson }};
+        const scenarios = {{ scenarios_data | tojson }};
 
-        // Render a chart for average values
-        if (scenarioData) {
-            const ctx = document.getElementById('averageChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: scenarioData.labels,  // Scenario names
-                    datasets: [{
-                        label: 'Average Values',
-                        data: scenarioData.values,  // Average values for each scenario
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+        // Render a chart for each scenario
+        if (scenarios) {
+            Object.keys(scenarios).forEach((scenario, index) => {
+                const ctx = document.getElementById(`chart-${index}`).getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: scenarios[scenario].years,  // Years for the scenario
+                        datasets: [{
+                            label: scenario,
+                            data: scenarios[scenario].values,  // Values for each year
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
+                });
             });
         }
     </script>

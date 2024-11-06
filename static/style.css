@@ -242,3 +242,31 @@ main {
 .restart-icon:hover {
     color: #8b1013;
 }
+.charts-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Adds space between the charts */
+    flex-wrap: wrap; /* Allows wrapping to the next line if necessary */
+}
+
+.chart-container {
+    flex: 1; /* Distribute space equally */
+    min-width: 300px; /* Minimum width for each chart */
+    border: 1px solid #333;
+    background-color: #f8f8f8;
+    margin: 10px;
+}
+
+.chart-header {
+    background-color: #6c8f2c; /* Green background */
+    color: #fff; /* White text */
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+}

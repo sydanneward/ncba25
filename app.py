@@ -43,29 +43,25 @@ def get_scenario_data(state, county):
     
     if county_data.empty:
         logging.warning(f"No data found for County: {county}, State: {state}")
-        return {}
+        return {}, {}
 
-    # Group by Scenario and Year, then calculate average values
+    # Group by Scenario and Year
     avg_data = county_data.groupby(['Scenario', 'Year'])['Value'].mean().reset_index()
 
-    # Create bar plots for each scenario
-    scenarios = ['Conservative', 'Moderate', 'High Net']
-    plot_paths = {}
-    for scenario in scenarios:
+    # Prepare data for rendering charts
+    scenarios_data = {}
+    for scenario in avg_data['Scenario'].unique():
         scenario_data = avg_data[avg_data['Scenario'] == scenario]
-        if not scenario_data.empty:
-            plt.figure(figsize=(10, 6))
-            plt.bar(scenario_data['Year'], scenario_data['Value'], color='skyblue')
-            plt.title(f'{scenario} Scenario for {county}, {state}')
-            plt.xlabel('Year')
-            plt.ylabel('Average Value')
-            plt.xticks(rotation=45)
-            plot_path = f'static/plots/{county}_{state}_{scenario}.png'
-            plt.savefig(plot_path)
-            plt.close()
-            plot_paths[scenario] = plot_path
+        scenarios_data[scenario] = {
+            'years': scenario_data['Year'].tolist(),
+            'values': scenario_data['Value'].tolist()
+        }
 
-    return plot_paths, avg_data.groupby('Scenario')['Value'].mean().to_dict()
+    # Calculate overall averages for display
+    averages = avg_data.groupby('Scenario')['Value'].mean().to_dict()
+
+    return scenarios_data, averages
+
 
 
 
@@ -111,20 +107,15 @@ def acres():
 def policy():
     county = session.get('county')
     state = session.get('state')
-    plot_paths, averages = get_scenario_data(state, county)
+    scenarios_data, averages = get_scenario_data(state, county)
 
     form = EmailForm()
     if form.validate_on_submit():
         session['email'] = form.email.data
         return redirect(url_for("thanks"))
 
-    # Prepare data for JavaScript
-    scenario_data = {
-        "labels": list(averages.keys()),
-        "values": list(averages.values())
-    }
+    return render_template("policy.html", scenarios_data=scenarios_data, averages=averages, step=3, form=form)
 
-    return render_template("policy.html", plot_paths=plot_paths, averages=averages, scenario_data=scenario_data, step=3, form=form)
 
 
 
