@@ -5,10 +5,10 @@ from flask_wtf import FlaskForm
 from wtforms import HiddenField, IntegerField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email
 import matplotlib
-matplotlib.use('Agg')  # Use a non-interactive backend
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os
-# Initialize the Flask application
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
@@ -20,7 +20,6 @@ class CountyForm(FlaskForm):
     county = HiddenField('County', validators=[DataRequired()])
     state = HiddenField('State', validators=[DataRequired()])
     submit = SubmitField('Next')
-
 
 class AcreForm(FlaskForm):
     acres = IntegerField('Number of Acres', validators=[DataRequired()])
@@ -62,9 +61,6 @@ def get_scenario_data(state, county):
 
     return scenarios_data, averages
 
-
-
-
 @app.route("/", methods=["GET", "POST"])
 def county():
     form = CountyForm()
@@ -91,8 +87,6 @@ def county():
     
     return render_template("county.html", form=form, step=1)
 
-
-
 @app.route("/acres", methods=["GET", "POST"])
 def acres():
     form = AcreForm()
@@ -115,11 +109,6 @@ def policy():
         return redirect(url_for("thanks"))
 
     return render_template("policy.html", scenarios_data=scenarios_data, averages=averages, step=3, form=form)
-
-
-
-
-
 
 @app.route("/thanks")
 def thanks():
