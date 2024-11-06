@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select County</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <main>
+        <form method="POST" action="/">
+            {{ form.hidden_tag() }}
+            <div id="map"></div>
+            <header>
+                <h1>IS YOU PRF POLICY WORKING FOR YOU?</h1>
+            </header>
+            <div id="county-info">
+                <p id="selected-county">Selected County: <span>None</span></p>
+            </div>
+            {{ form.submit(class="submit-btn") }}
+        </form>
+
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([37.8, -96], 4); // Adjust initial center and zoom
+
+        // Load and display GeoJSON data
+        fetch("{{ url_for('static', filename='us_counties.geojson') }}")
+            .then(response => response.json())
+            .then(data => {
+                L.geoJson(data, {
+                    style: {
+                        color: "#555",
+                        weight: 1,
+                        fillColor: "#888",
+                        fillOpacity: 0.6
+                    },
+                    onEachFeature: function (feature, layer) {
+                        layer.on('click', function () {
+                            const countyName = feature.properties.Name || "Unknown County";
+                            document.querySelector('input[name="county"]').value = countyName;
+                            document.querySelector('#selected-county span').textContent = countyName;
+                        });
+                    }
+                }).addTo(map);
+            })
+            .catch(error => console.error("Error loading GeoJSON data:", error));
+
+        // Add basemap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const steps = document.querySelectorAll(".step");
+            const lines = document.querySelectorAll(".line");
+    
+            steps.forEach((step, index) => {
+                if (step.classList.contains("active")) {
+                    for (let i = 0; i <= index; i++) {
+                        steps[i].classList.add("filled");
+                        if (i < lines.length) lines[i].classList.add("filled");
+                    }
+                }
+            });
+        });
+    </script>
+    
+    <div class="progress-tracker">
+        <div class="step {{ 'active' if step >= 1 else '' }}">1</div>
+        <div class="line {{ 'active' if step >= 2 else '' }}"></div>
+        <div class="step {{ 'active' if step >= 2 else '' }}">2</div>
+        <div class="line {{ 'active' if step >= 3 else '' }}"></div>
+        <div class="step {{ 'active' if step >= 3 else '' }}">3</div>
+        <div class="line {{ 'active' if step >= 4 else '' }}"></div>
+        <div class="step {{ 'active' if step >= 4 else '' }}">4</div>
+    </div>
+    
+</body>
+</html>

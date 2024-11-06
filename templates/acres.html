@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Submit Acres</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <h1>How many acres do you run?</h1>
+    </header>
+
+    <!-- Main content -->
+    <main>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <div id="acre-input">
+                <label for="acres">{{ form.acres.label }}</label>
+                {{ form.acres(class_="acre-field") }}
+            </div>
+            {{ form.submit(class_="submit-btn") }}
+        </form>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const steps = document.querySelectorAll(".step");
+            const lines = document.querySelectorAll(".line");
+    
+            steps.forEach((step, index) => {
+                if (step.classList.contains("active")) {
+                    for (let i = 0; i <= index; i++) {
+                        steps[i].classList.add("filled");
+                        if (i < lines.length) lines[i].classList.add("filled");
+                    }
+                }
+            });
+        });
+    </script>
+    
+    <div class="progress-tracker">
+        <div class="step {{ 'active' if step >= 1 else '' }}">1</div>
+        <div class="line {{ 'active' if step >= 2 else '' }}"></div>
+        <div class="step {{ 'active' if step >= 2 else '' }}">2</div>
+        <div class="line {{ 'active' if step >= 3 else '' }}"></div>
+        <div class="step {{ 'active' if step >= 3 else '' }}">3</div>
+        <div class="line {{ 'active' if step >= 4 else '' }}"></div>
+        <div class="step {{ 'active' if step >= 4 else '' }}">4</div>
+    </div>
+    
+</body>
+
+</html>

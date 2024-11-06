@@ -1,0 +1,189 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    color: #333;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    color: black;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 1.5rem;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    max-width: 90%; /* Sets the maximum width of the main content */
+    margin: 0 auto; /* Centers the main content */
+}
+
+/* Wider map */
+#map {
+    width: 100%;
+    max-width: 1000px; /* You can increase this if desired */
+    height: 500px; /* Keeps the height consistent */
+    margin-bottom: 1rem;
+}
+
+#county-info {
+    text-align: center;
+    margin: 1rem 0;
+    font-size: 1.1rem;
+}
+
+#county-info p {
+    font-weight: bold;}
+
+.submit-btn {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 1rem auto;
+    padding: 0.7rem;
+    font-size: 1.1rem;
+    color: white;
+    background-color: #ab1417;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #8b1013;
+}
+
+.input-field {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 0.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+/* Progress Tracker Styling */
+.progress-tracker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ccc;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: background-color 0.3s;
+}
+
+.line {
+    width: 50px;
+    height: 4px;
+    background-color: #ccc;
+    transition: background-color 0.3s;
+}
+
+.step.active {
+    background-color: #ab1417;
+}
+
+.line.active {
+    background-color: #ab1417;
+}
+.step.filled {
+    background-color: #ab1417;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.line.filled {
+    background-color: #ab1417;
+    transition: background-color 0.3s ease-in-out;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    color: #333;
+    margin: 0;
+}
+
+header {
+    background-color: #ab1417;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 1.5rem;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.policy-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.policy-column {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.policy-header {
+    background-color: #6c8f2c;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.policy-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.policy-table td {
+    padding: 5px;
+}
+
+.policy-table td:first-child {
+    width: 50px;
+    text-align: right;
+}
+
+.bar {
+    height: 20px;
+    color: white;
+    padding: 0.2rem;
+    font-size: 0.9rem;
+    text-align: right;
+    white-space: nowrap;
+}
